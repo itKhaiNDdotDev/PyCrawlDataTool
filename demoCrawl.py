@@ -1,26 +1,37 @@
 print("Version 0.0.1")
 print("==============================")
-#Input and Select
-bankName = input("Nhap ten ngan hang ban muon kiem tra ty gia (Chu thuong ghi lien khong dau, VD: bidv, vietcombank,..): ")
-print("Ban da chon ngan hang " + bankName + ". Luu output sau thanh file [ten file cua ban].html va mo no bang web browser hoac excel.")
 
-#Crawl
 import requests
+from bs4 import BeautifulSoup
+from tkinter import messagebox
+import webbrowser
+
+# Input and Select
+bankName = input("Nhap ten ngan hang ban muon kiem tra ty gia (Chu thuong ghi lien khong dau, VD: bidv, vietcombank,..): ")
+
+# Crawl
 #https://portal.vietcombank.com.vn/Personal/TG/Pages/ty-gia.aspx?devicechannel=default
 response = requests.get("https://tygia.vn/ty-gia/" + bankName)
 #print(response)
 #print(response.content)
 
-#Separate
-from bs4 import BeautifulSoup
+# Separate
 dataTree = BeautifulSoup(response.content, "html.parser")
 #print(dataTree)
 dataFil = dataTree.findAll('table', class_='table table-bordered table-hover')
-print(dataFil)
+#print(dataFil)
+#linecache.getline()
 
+messagebox.showinfo("Crawl Data (Bank) Tool", "Bạn đã chọn ngân hàng " + bankName + ". File dữ liệu kết quả được lưu cùng folder với file thực thi chương trình")
+# Output
+try:
+	f = open("outputCrawl.html", mode = 'w+', encoding = 'utf-8')
+	f.write(str(dataFil))
+finally:
+	f.close()
+webbrowser.open("outputCrawl.html")
 
-
-#--------BS Objects--------------------
+#--------------------------------BS Objects--------------------
 #Tag
 #Name
 #Attributes
